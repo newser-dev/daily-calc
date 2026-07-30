@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>연봉 실수령액 계산기 - 4대보험·소득세 반영 | 간편계산소</title>
+<meta name="description" content="연봉을 입력하면 국민연금, 건강보험, 고용보험, 소득세를 공제한 월 실수령액을 계산합니다. 2026년 요율 기준.">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header>
+  <div class="header-inner">
+    <a class="logo" href="index.html">간편계산소</a>
+    <nav>
+      <a href="char-count.html">글자수</a>
+      <a href="salary.html" class="active">연봉 실수령액</a>
+      <a href="percent.html">퍼센트</a>
+      <a href="age.html">만나이</a>
+      <a href="dday.html">D-day</a>
+    </nav>
+  </div>
+</header>
+<main>
+  <h1>연봉 실수령액 계산기</h1>
+  <p class="subtitle">4대보험 요율과 근로소득 간이세액 방식을 반영한 추정치입니다. 부양가족·비과세액에 따라 실제 금액과 차이가 있을 수 있습니다.</p>
+
+  <div class="card">
+    <div class="row">
+      <div class="field">
+        <label for="salary">연봉 (만원)</label>
+        <input type="number" id="salary" placeholder="예: 4000" min="0">
+      </div>
+      <div class="field">
+        <label for="taxFree">월 비과세액 (원)</label>
+        <input type="number" id="taxFree" value="200000" min="0">
+      </div>
+    </div>
+    <button class="primary" id="calcBtn">계산하기</button>
+    <div id="out" style="display:none">
+      <div class="result">월 실수령액 <strong id="net"></strong></div>
+      <table class="detail">
+        <tr><th>항목</th><td id="gross"></td></tr>
+        <tr><th>국민연금 (4.5%)</th><td id="pension"></td></tr>
+        <tr><th>건강보험 (3.545%)</th><td id="health"></td></tr>
+        <tr><th>장기요양보험</th><td id="care"></td></tr>
+        <tr><th>고용보험 (0.9%)</th><td id="employ"></td></tr>
+        <tr><th>소득세 (추정)</th><td id="tax"></td></tr>
+        <tr><th>지방소득세</th><td id="localTax"></td></tr>
+        <tr><th>공제 합계</th><td id="totalDeduct"></td></tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="ad-slot">광고 영역 (애드센스 승인 후 코드 삽입)</div>
+
+  <div class="card content">
+    <h2>연봉에서 무엇이 빠져나가나요?</h2>
+    <p>월급 명세서의 공제 항목은 크게 4대보험과 세금으로 나뉩니다. 국민연금은 월 소득의 4.5%(회사가 4.5% 추가 부담), 건강보험은 3.545%, 장기요양보험은 건강보험료의 약 13%, 고용보험은 0.9%를 근로자가 부담합니다. 여기에 근로소득 간이세액표에 따른 소득세와 그 10%인 지방소득세가 더해집니다.</p>
+    <p>식대 등 비과세 항목은 소득세와 4대보험 계산에서 제외되므로, 같은 연봉이라도 비과세액이 클수록 실수령액이 늘어납니다. 2026년 기준 식대 비과세 한도는 월 20만원입니다.</p>
+    <p>이 계산기는 부양가족 1인(본인) 기준의 추정치입니다. 부양가족이 많거나 연말정산 공제 항목이 많다면 실제 원천징수액은 더 적을 수 있습니다. 정확한 금액은 급여 명세서 또는 국세청 홈택스의 간이세액표를 확인하세요.</p>
+  </div>
+</main>
+<footer>
+  <p>© 2026 간편계산소 · 모든 계산 결과는 참고용이며 법적 효력이 없습니다. · <a href="privacy.html">개인정보처리방침</a></p>
+</footer>
+<script>
+const won = n => Math.round(n).toLocaleString('ko-KR') + '원';
+
+function incomeTax(annualTaxable, pensionYear) {
+  // 근로소득공제
+  const g = annualTaxable;
+  let ded;
+  if (g <= 5000000) ded = g * 0.7;
+  else if (g <= 15000000) ded = 3500000 + (g - 5000000) * 0.4;
+  else if (g <= 45000000) ded = 7500000 + (g - 15000000) * 0.15;
+  else if (g <= 100000000) ded = 12000000 + (g - 45000000) * 0.05;
+  else ded = 14750000 + (g - 100000000) * 0.02;
+  ded = Math.min(ded, 20000000);
+
+  // 과세표준 = 총급여 - 근로소득공제 - 본인 인적공제 150만 - 국민연금
+  let base = g - ded - 1500000 - pensionYear;
+  if (base <= 0) return 0;
+
+  // 기본세율 (2026)
+  const brackets = [
+    [14000000, 0.06], [50000000, 0.15], [88000000, 0.24], [150000000, 0.35],
+    [300000000, 0.38], [500000000, 0.40], [1000000000, 0.42], [Infinity, 0.45]
+  ];
+  let tax = 0, prev = 0;
+  for (const [limit, rate] of brackets) {
+    if (base > prev) { tax += (Math.min(base, limit) - prev) * rate; prev = limit; }
+    else break;
+  }
+
+  // 근로소득세액공제
+  let credit = tax <= 1300000 ? tax * 0.55 : 715000 + (tax - 1300000) * 0.3;
+  let cap;
+  if (g <= 33000000) cap = 740000;
+  else if (g <= 70000000) cap = Math.max(660000, 740000 - (g - 33000000) * 0.008);
+  else if (g <= 120000000) cap = Math.max(500000, 660000 - (g - 70000000) * 0.5);
+  else cap = 500000;
+  tax -= Math.min(credit, cap);
+  return Math.max(0, tax);
+}
+
+document.getElementById('calcBtn').addEventListener('click', () => {
+  const annual = (parseFloat(document.getElementById('salary').value) || 0) * 10000;
+  const taxFreeMonth = parseFloat(document.getElementById('taxFree').value) || 0;
+  if (annual <= 0) return;
+
+  const grossMonth = annual / 12;
+  const taxableMonth = Math.max(0, grossMonth - taxFreeMonth);
+
+  // 국민연금: 기준소득월액 상한 637만원
+  const pension = Math.min(taxableMonth, 6370000) * 0.045;
+  const health = taxableMonth * 0.03545;
+  const care = health * 0.1295;
+  const employ = taxableMonth * 0.009;
+  const tax = incomeTax(taxableMonth * 12, pension * 12) / 12;
+  const localTax = tax * 0.1;
+
+  const totalDeduct = pension + health + care + employ + tax + localTax;
+  const net = grossMonth - totalDeduct;
+
+  const el = id => document.getElementById(id);
+  el('out').style.display = 'block';
+  el('net').textContent = won(net);
+  el('gross').textContent = '월 급여(세전) ' + won(grossMonth);
+  el('pension').textContent = won(pension);
+  el('health').textContent = won(health);
+  el('care').textContent = won(care);
+  el('employ').textContent = won(employ);
+  el('tax').textContent = won(tax);
+  el('localTax').textContent = won(localTax);
+  el('totalDeduct').textContent = won(totalDeduct);
+});
+</script>
+</body>
+</html>

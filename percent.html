@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>퍼센트 계산기 - 할인율, 증감률, 비율 계산 | 간편계산소</title>
+<meta name="description" content="전체값의 몇 %는 얼마인지, 할인율, 증감률(변화율), 비율까지. 상황별 퍼센트 계산기를 무료로 사용하세요.">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header>
+  <div class="header-inner">
+    <a class="logo" href="index.html">간편계산소</a>
+    <nav>
+      <a href="char-count.html">글자수</a>
+      <a href="salary.html">연봉 실수령액</a>
+      <a href="percent.html" class="active">퍼센트</a>
+      <a href="age.html">만나이</a>
+      <a href="dday.html">D-day</a>
+    </nav>
+  </div>
+</header>
+<main>
+  <h1>퍼센트 계산기</h1>
+  <p class="subtitle">필요한 계산 유형을 골라 숫자만 입력하세요. 입력하는 즉시 결과가 나옵니다.</p>
+
+  <div class="card">
+    <div class="field">
+      <label>1. 전체값의 몇 %는?</label>
+      <div class="row">
+        <div class="field"><input type="number" id="a1" placeholder="전체값 (예: 50000)"></div>
+        <div class="field"><input type="number" id="a2" placeholder="% (예: 20)"></div>
+      </div>
+      <div class="result" id="r1">전체값과 %를 입력하세요</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="field">
+      <label>2. A는 B의 몇 %?</label>
+      <div class="row">
+        <div class="field"><input type="number" id="b1" placeholder="일부값 A (예: 30)"></div>
+        <div class="field"><input type="number" id="b2" placeholder="전체값 B (예: 120)"></div>
+      </div>
+      <div class="result" id="r2">두 값을 입력하세요</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="field">
+      <label>3. 증감률 (A에서 B로 변하면 몇 %?)</label>
+      <div class="row">
+        <div class="field"><input type="number" id="c1" placeholder="이전값 (예: 12000)"></div>
+        <div class="field"><input type="number" id="c2" placeholder="이후값 (예: 15000)"></div>
+      </div>
+      <div class="result" id="r3">두 값을 입력하세요</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="field">
+      <label>4. 할인가 계산 (정가에서 몇 % 할인?)</label>
+      <div class="row">
+        <div class="field"><input type="number" id="d1" placeholder="정가 (예: 89000)"></div>
+        <div class="field"><input type="number" id="d2" placeholder="할인율 % (예: 30)"></div>
+      </div>
+      <div class="result" id="r4">정가와 할인율을 입력하세요</div>
+    </div>
+  </div>
+
+  <div class="ad-slot">광고 영역 (애드센스 승인 후 코드 삽입)</div>
+
+  <div class="card content">
+    <h2>퍼센트 계산, 헷갈릴 때 이렇게 기억하세요</h2>
+    <p>퍼센트(%)는 "100을 기준으로 한 비율"입니다. 전체값의 20%를 구하려면 전체값에 0.2를 곱하면 되고, A가 B의 몇 %인지 구하려면 A를 B로 나눈 뒤 100을 곱하면 됩니다.</p>
+    <p>가장 헷갈리기 쉬운 것이 <strong>증감률</strong>입니다. 증감률은 "변화량 ÷ 이전값 × 100"으로 계산합니다. 예를 들어 12,000원이던 상품이 15,000원이 되었다면 (15,000 − 12,000) ÷ 12,000 × 100 = 25% 인상입니다. 기준이 되는 값은 항상 '이전값'이라는 점을 기억하세요.</p>
+    <p>쇼핑할 때 자주 쓰는 할인가 계산은 "정가 × (100 − 할인율) ÷ 100"입니다. 30% 할인이라면 정가에 0.7을 곱한 값이 결제 금액이 됩니다.</p>
+  </div>
+</main>
+<footer>
+  <p>© 2026 간편계산소 · 모든 계산 결과는 참고용이며 법적 효력이 없습니다. · <a href="privacy.html">개인정보처리방침</a></p>
+</footer>
+<script>
+const v = id => parseFloat(document.getElementById(id).value);
+const set = (id, html) => document.getElementById(id).innerHTML = html;
+const fmt = n => (Math.round(n * 100) / 100).toLocaleString('ko-KR');
+
+function bind(ids, fn) {
+  ids.forEach(id => document.getElementById(id).addEventListener('input', fn));
+}
+
+bind(['a1','a2'], () => {
+  const total = v('a1'), p = v('a2');
+  if (isNaN(total) || isNaN(p)) return;
+  set('r1', `${fmt(total)}의 ${fmt(p)}% = <strong>${fmt(total * p / 100)}</strong>`);
+});
+
+bind(['b1','b2'], () => {
+  const a = v('b1'), b = v('b2');
+  if (isNaN(a) || isNaN(b) || b === 0) return;
+  set('r2', `${fmt(a)}는 ${fmt(b)}의 <strong>${fmt(a / b * 100)}%</strong>`);
+});
+
+bind(['c1','c2'], () => {
+  const a = v('c1'), b = v('c2');
+  if (isNaN(a) || isNaN(b) || a === 0) return;
+  const rate = (b - a) / a * 100;
+  set('r3', `${fmt(a)} → ${fmt(b)} : <strong>${fmt(Math.abs(rate))}% ${rate >= 0 ? '증가' : '감소'}</strong>`);
+});
+
+bind(['d1','d2'], () => {
+  const price = v('d1'), rate = v('d2');
+  if (isNaN(price) || isNaN(rate)) return;
+  const sale = price * (100 - rate) / 100;
+  set('r4', `할인가 <strong>${fmt(sale)}</strong> (${fmt(price - sale)} 할인)`);
+});
+</script>
+</body>
+</html>
