@@ -367,26 +367,26 @@ button.ghost:hover { color: var(--text); border-color: var(--muted); }
 .calc-display {
   color: #fff;
   text-align: right;
-  font-size: 2.6rem;
-  font-weight: 300;
+  font-size: 3.4rem;
+  font-weight: 400;
   padding: 24px 10px 6px;
   word-break: break-all;
   font-variant-numeric: tabular-nums;
 }
-.calc-sub { color: #8e8e93; text-align: right; font-size: 0.95rem; padding: 0 10px; min-height: 22px; }
+.calc-sub { color: #8e8e93; text-align: right; font-size: 1.1rem; padding: 0 10px; min-height: 26px; }
 .calc-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-top: 14px; }
 .calc-btn {
   border: none;
   border-radius: 999px;
   aspect-ratio: 1;
-  font-size: 1.3rem;
+  font-size: 1.7rem;
   font-weight: 600;
   cursor: pointer;
   font-family: inherit;
 }
 .calc-btn.num { background: #333336; color: #fff; }
 .calc-btn.fn { background: #a5a5a5; color: #000; }
-.calc-btn.op { background: #ff9f0a; color: #fff; font-size: 1.6rem; }
+.calc-btn.op { background: #ff9f0a; color: #fff; font-size: 2rem; }
 .calc-btn.op.selected { background: #fff; color: #ff9f0a; }
 .calc-btn.zero {
   grid-column: span 2;
