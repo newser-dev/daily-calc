@@ -13,6 +13,8 @@
   <div class="header-inner">
     <a class="logo" href="index.html">간편계산소</a>
     <nav>
+      <a href="clock.html">시계</a>
+      <a href="calculator.html">계산기</a>
       <a href="char-count.html" class="active">글자수</a>
       <a href="salary.html">연봉 실수령액</a>
       <a href="percent.html">퍼센트</a>
@@ -23,10 +25,15 @@
 </header>
 <main>
   <h1>글자수 세기</h1>
-  <p class="subtitle">입력하는 즉시 공백 포함/제외 글자수, 바이트, 단어 수를 계산합니다. 입력한 내용은 저장되지 않습니다.</p>
+  <p class="subtitle">입력하는 즉시 공백 포함/제외 글자수, 바이트, 단어 수를 계산합니다. 사진을 찍어 올리면 사진 속 글자를 자동으로 인식해 세어줍니다. 입력한 내용은 저장되지 않습니다.</p>
 
   <div class="card">
     <textarea id="text" placeholder="이곳에 글을 입력하거나 붙여넣으세요..." autofocus></textarea>
+    <div class="row" style="align-items:center; margin-top:10px">
+      <button class="ghost" id="photoBtn" type="button">📷 사진에서 글자수 세기</button>
+      <span id="ocrStatus" style="font-size:0.8rem; color:var(--muted)"></span>
+    </div>
+    <input type="file" id="photoInput" accept="image/*" capture="environment" style="display:none">
     <div class="stat-grid">
       <div class="stat"><div class="num" id="withSpace">0</div><div class="label">공백 포함</div></div>
       <div class="stat"><div class="num" id="noSpace">0</div><div class="label">공백 제외</div></div>
@@ -49,6 +56,8 @@
       <li>블로그·SNS 게시글 길이 조절</li>
       <li>문자 메시지(SMS 90byte) 길이 확인</li>
     </ul>
+    <h2>사진에서 글자수 세기</h2>
+    <p>손글씨 원고, 인쇄물, 화면 캡처 등 사진으로 된 글의 글자수가 궁금할 때 "📷 사진에서 글자수 세기" 버튼을 눌러보세요. 사진 속 글자를 자동으로 인식해 텍스트로 바꾸고 바로 글자수를 계산합니다. 인식은 브라우저 안에서 처리되며 사진이 서버로 전송되지 않습니다. 다만 손글씨나 흐릿한 사진은 인식률이 떨어질 수 있으니 결과를 한 번 확인해 주세요.</p>
   </div>
 </main>
 <footer>
@@ -58,7 +67,7 @@
 const el = id => document.getElementById(id);
 const fmt = n => n.toLocaleString('ko-KR');
 
-el('text').addEventListener('input', () => {
+function updateCounts() {
   const t = el('text').value;
   el('withSpace').textContent = fmt(t.length);
   el('noSpace').textContent = fmt(t.replace(/\s/g, '').length);
@@ -68,6 +77,59 @@ el('text').addEventListener('input', () => {
   const words = t.trim() ? t.trim().split(/\s+/).length : 0;
   el('words').textContent = fmt(words);
   el('lines').textContent = fmt(t ? t.split('\n').length : 0);
+}
+
+el('text').addEventListener('input', updateCounts);
+
+let tesseractLoading = null;
+function loadTesseract() {
+  if (window.Tesseract) return Promise.resolve();
+  if (tesseractLoading) return tesseractLoading;
+  tesseractLoading = new Promise((resolve, reject) => {
+    const script = document.createElement('script');
+    script.src = 'https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js';
+    script.onload = resolve;
+    script.onerror = () => reject(new Error('load-failed'));
+    document.head.appendChild(script);
+  });
+  return tesseractLoading;
+}
+
+const photoBtn = el('photoBtn');
+const photoInput = el('photoInput');
+const ocrStatus = el('ocrStatus');
+
+photoBtn.addEventListener('click', () => photoInput.click());
+
+photoInput.addEventListener('change', async () => {
+  const file = photoInput.files[0];
+  if (!file) return;
+  photoBtn.disabled = true;
+  ocrStatus.textContent = '인식 준비 중...';
+  try {
+    await loadTesseract();
+    ocrStatus.textContent = '사진에서 글자를 읽는 중... (몇 초 걸릴 수 있어요)';
+    const { data } = await Tesseract.recognize(file, 'kor+eng', {
+      logger: m => {
+        if (m.status === 'recognizing text') {
+          ocrStatus.textContent = `인식 중... ${Math.round(m.progress * 100)}%`;
+        }
+      }
+    });
+    const recognized = (data.text || '').trim();
+    if (!recognized) {
+      ocrStatus.textContent = '글자를 찾지 못했어요. 더 선명한 사진으로 다시 시도해 보세요.';
+    } else {
+      el('text').value = recognized;
+      updateCounts();
+      ocrStatus.textContent = '인식 완료! 결과가 정확한지 확인해 보세요.';
+    }
+  } catch (e) {
+    ocrStatus.textContent = '인식에 실패했어요. 잠시 후 다시 시도해 주세요.';
+  } finally {
+    photoBtn.disabled = false;
+    photoInput.value = '';
+  }
 });
 </script>
 </body>

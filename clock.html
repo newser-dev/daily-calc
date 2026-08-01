@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>시계 - 타이머·알람·스톱워치 | 간편계산소</title>
+<meta name="description" content="라면 3분 타이머, 공부 알람, 운동 스톱워치까지 한 화면에서. 설치 없이 브라우저에서 바로 쓰는 무료 시계 도구입니다.">
+<link rel="stylesheet" href="style.css">
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6240593008907807" crossorigin="anonymous"></script>
+</head>
+<body>
+<header>
+  <div class="header-inner">
+    <a class="logo" href="index.html">간편계산소</a>
+    <nav>
+      <a href="clock.html" class="active">시계</a>
+      <a href="calculator.html">계산기</a>
+      <a href="char-count.html">글자수</a>
+      <a href="salary.html">연봉 실수령액</a>
+      <a href="percent.html">퍼센트</a>
+      <a href="age.html">만나이</a>
+      <a href="dday.html">D-day</a>
+    </nav>
+  </div>
+</header>
+<main>
+  <h1>시계</h1>
+  <p class="subtitle">타이머, 알람, 스톱워치를 한 화면에서 사용하세요. 이 탭을 열어둔 상태에서만 동작합니다.</p>
+
+  <div class="card">
+    <div class="tab-bar">
+      <button class="tab-btn active" data-tab="timer">타이머</button>
+      <button class="tab-btn" data-tab="alarm">알람</button>
+      <button class="tab-btn" data-tab="stopwatch">스톱워치</button>
+    </div>
+
+    <div class="tab-panel active" id="panel-timer">
+      <div class="timer-wrap" id="timerWrap">
+        <svg class="timer-ring" viewBox="0 0 200 200">
+          <circle class="ring-bg" cx="100" cy="100" r="90"></circle>
+          <circle class="ring-progress" id="ringProgress" cx="100" cy="100" r="90"></circle>
+        </svg>
+        <div class="timer-display" id="display">05:00</div>
+      </div>
+
+      <div class="timer-controls">
+        <button class="primary" id="startBtn">시작</button>
+        <button class="ghost" id="resetBtn">초기화</button>
+      </div>
+
+      <div class="preset-grid" id="presetGrid">
+        <button class="preset-chip" data-sec="60">1분</button>
+        <button class="preset-chip" data-sec="180">3분</button>
+        <button class="preset-chip" data-sec="300">5분</button>
+        <button class="preset-chip" data-sec="600">10분</button>
+        <button class="preset-chip" data-sec="900">15분</button>
+        <button class="preset-chip" data-sec="1500">25분</button>
+        <button class="preset-chip" data-sec="1800">30분</button>
+        <button class="preset-chip" data-sec="3600">60분</button>
+      </div>
+
+      <div class="custom-time">
+        <input type="number" id="customH" min="0" max="23" placeholder="0">
+        <span>시간</span>
+        <input type="number" id="customM" min="0" max="59" placeholder="0">
+        <span>분</span>
+        <input type="number" id="customS" min="0" max="59" placeholder="0">
+        <span>초</span>
+        <button class="ghost" id="applyCustom">적용</button>
+      </div>
+    </div>
+
+    <div class="tab-panel" id="panel-alarm">
+      <div class="row" style="align-items:flex-end">
+        <div class="field" style="flex:1">
+          <label for="alarmTime">알람 시각</label>
+          <input type="time" id="alarmTime">
+        </div>
+        <div class="field" style="flex:0">
+          <button class="primary" id="addAlarmBtn" style="margin-bottom:1px">알람 추가</button>
+        </div>
+      </div>
+      <div id="alarmList"></div>
+      <p class="empty-hint" id="alarmEmpty">등록된 알람이 없습니다.</p>
+    </div>
+
+    <div class="tab-panel" id="panel-stopwatch">
+      <div class="stopwatch-display" id="swDisplay">00:00.00</div>
+      <div class="timer-controls">
+        <button class="primary" id="swStartBtn">시작</button>
+        <button class="ghost" id="swLapBtn" disabled>랩</button>
+        <button class="ghost" id="swResetBtn">초기화</button>
+      </div>
+      <div class="lap-list" id="lapList"></div>
+    </div>
+  </div>
+
+  <div class="ad-slot">광고 영역 (애드센스 승인 후 코드 삽입)</div>
+
+  <div class="card content">
+    <h2>이럴 때 쓰세요</h2>
+    <ul>
+      <li><strong>타이머</strong> — 라면 3분, 계란 반숙 6분·완숙 12분, 공부 뽀모도로(25분+5분 휴식), 운동 인터벌</li>
+      <li><strong>알람</strong> — 짧은 낮잠, 회의 시작 전 알림, 요리 중간 확인</li>
+      <li><strong>스톱워치</strong> — 운동 기록, 발표 연습 시간 재기, 랩타임 비교</li>
+    </ul>
+    <h2>사용 시 참고하세요</h2>
+    <p>알람과 타이머는 이 브라우저 탭이 열려 있는 동안에만 동작합니다. 탭을 닫거나 컴퓨터가 잠자기 모드로 전환되면 알림이 울리지 않을 수 있으니, 중요한 일정에는 휴대폰 기본 알람 앱을 함께 사용하는 것을 추천합니다. 소리가 나지 않으면 기기의 무음 모드나 브라우저 음소거 설정을 확인해 주세요.</p>
+  </div>
+</main>
+<footer>
+  <p>© 2026 간편계산소 · 모든 계산 결과는 참고용이며 법적 효력이 없습니다. · <a href="privacy.html">개인정보처리방침</a></p>
+</footer>
+<script>
+/* 탭 전환 */
+document.querySelectorAll('.tab-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('panel-' + btn.dataset.tab).classList.add('active');
+  });
+});
+
+let audioCtx = null;
+function ensureAudio() {
+  if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  return audioCtx;
+}
+function playAlarmSound() {
+  const ctx = ensureAudio();
+  for (let i = 0; i < 4; i++) {
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.type = 'sine';
+    osc.frequency.value = 880;
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+    const start = ctx.currentTime + i * 0.55;
+    gain.gain.setValueAtTime(0.0001, start);
+    gain.gain.exponentialRampToValueAtTime(0.35, start + 0.02);
+    gain.gain.exponentialRampToValueAtTime(0.0001, start + 0.4);
+    osc.start(start);
+    osc.stop(start + 0.45);
+  }
+  if (navigator.vibrate) navigator.vibrate([200, 100, 200, 100, 200]);
+}
+
+/* ===== 타이머 ===== */
+(function () {
+  const RADIUS = 90;
+  const CIRCUMFERENCE = 2 * Math.PI * RADIUS;
+  const ring = document.getElementById('ringProgress');
+  const display = document.getElementById('display');
+  const wrap = document.getElementById('timerWrap');
+  const startBtn = document.getElementById('startBtn');
+  const resetBtn = document.getElementById('resetBtn');
+
+  ring.style.strokeDasharray = CIRCUMFERENCE;
+  ring.style.strokeDashoffset = 0;
+
+  let totalSeconds = 300;
+  let remaining = totalSeconds;
+  let endTime = null;
+  let intervalId = null;
+  let running = false;
+
+  const pad = n => String(n).padStart(2, '0');
+
+  function formatTime(sec) {
+    const h = Math.floor(sec / 3600);
+    const m = Math.floor((sec % 3600) / 60);
+    const s = sec % 60;
+    return h > 0 ? `${pad(h)}:${pad(m)}:${pad(s)}` : `${pad(m)}:${pad(s)}`;
+  }
+
+  function render() {
+    display.textContent = formatTime(remaining);
+    const ratio = totalSeconds > 0 ? remaining / totalSeconds : 0;
+    ring.style.strokeDashoffset = CIRCUMFERENCE * (1 - ratio);
+    document.title = running ? `${formatTime(remaining)} - 시계 | 간편계산소` : '시계 - 타이머·알람·스톱워치 | 간편계산소';
+  }
+
+  function setTotal(sec) {
+    if (running) return;
+    totalSeconds = sec;
+    remaining = sec;
+    wrap.classList.remove('done');
+    document.querySelectorAll('.preset-chip').forEach(btn => {
+      btn.classList.toggle('active', Number(btn.dataset.sec) === sec);
+    });
+    render();
+  }
+
+  function tick() {
+    remaining = Math.max(0, Math.ceil((endTime - Date.now()) / 1000));
+    render();
+    if (remaining <= 0) {
+      clearInterval(intervalId);
+      running = false;
+      startBtn.textContent = '시작';
+      wrap.classList.add('done');
+      playAlarmSound();
+    }
+  }
+
+  function start() {
+    if (running || totalSeconds <= 0) return;
+    ensureAudio();
+    if (remaining <= 0) remaining = totalSeconds;
+    wrap.classList.remove('done');
+    endTime = Date.now() + remaining * 1000;
+    running = true;
+    startBtn.textContent = '일시정지';
+    intervalId = setInterval(tick, 250);
+  }
+
+  function pause() {
+    if (!running) return;
+    clearInterval(intervalId);
+    remaining = Math.max(0, Math.ceil((endTime - Date.now()) / 1000));
+    running = false;
+    startBtn.textContent = '시작';
+    render();
+  }
+
+  function reset() {
+    clearInterval(intervalId);
+    running = false;
+    remaining = totalSeconds;
+    startBtn.textContent = '시작';
+    wrap.classList.remove('done');
+    render();
+  }
+
+  startBtn.addEventListener('click', () => { running ? pause() : start(); });
+  resetBtn.addEventListener('click', reset);
+
+  document.querySelectorAll('.preset-chip').forEach(btn => {
+    btn.addEventListener('click', () => setTotal(Number(btn.dataset.sec)));
+  });
+
+  document.getElementById('applyCustom').addEventListener('click', () => {
+    const h = parseInt(document.getElementById('customH').value, 10) || 0;
+    const m = parseInt(document.getElementById('customM').value, 10) || 0;
+    const s = parseInt(document.getElementById('customS').value, 10) || 0;
+    const sec = h * 3600 + m * 60 + s;
+    if (sec > 0) setTotal(sec);
+  });
+
+  setTotal(300);
+  document.querySelector('.preset-chip[data-sec="300"]').classList.add('active');
+})();
+
+/* ===== 알람 ===== */
+(function () {
+  const listEl = document.getElementById('alarmList');
+  const emptyEl = document.getElementById('alarmEmpty');
+  const timeInput = document.getElementById('alarmTime');
+  let alarms = [];
+  let nextId = 1;
+
+  function todayStr() {
+    const d = new Date();
+    return `${d.getFullYear()}-${d.getMonth()}-${d.getDate()}`;
+  }
+
+  function to12h(hhmm) {
+    const [h, m] = hhmm.split(':').map(Number);
+    const period = h < 12 ? '오전' : '오후';
+    const h12 = h % 12 === 0 ? 12 : h % 12;
+    return `${period} ${h12}:${String(m).padStart(2, '0')}`;
+  }
+
+  function render() {
+    listEl.innerHTML = '';
+    alarms.forEach(a => {
+      const row = document.createElement('div');
+      row.className = 'list-row';
+      row.innerHTML = `<div><div class="time">${to12h(a.time)}</div><div class="sub">매일 반복</div></div>`;
+      const del = document.createElement('button');
+      del.className = 'del';
+      del.textContent = '삭제';
+      del.addEventListener('click', () => {
+        alarms = alarms.filter(x => x.id !== a.id);
+        render();
+      });
+      row.appendChild(del);
+      listEl.appendChild(row);
+    });
+    emptyEl.style.display = alarms.length ? 'none' : 'block';
+  }
+
+  document.getElementById('addAlarmBtn').addEventListener('click', () => {
+    if (!timeInput.value) return;
+    ensureAudio();
+    alarms.push({ id: nextId++, time: timeInput.value, lastFired: null });
+    render();
+  });
+
+  setInterval(() => {
+    if (!alarms.length) return;
+    const now = new Date();
+    const hhmm = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
+    const today = todayStr();
+    alarms.forEach(a => {
+      if (a.time === hhmm && a.lastFired !== today) {
+        a.lastFired = today;
+        playAlarmSound();
+      }
+    });
+  }, 1000);
+
+  render();
+})();
+
+/* ===== 스톱워치 ===== */
+(function () {
+  const display = document.getElementById('swDisplay');
+  const startBtn = document.getElementById('swStartBtn');
+  const lapBtn = document.getElementById('swLapBtn');
+  const resetBtn = document.getElementById('swResetBtn');
+  const lapList = document.getElementById('lapList');
+
+  let elapsed = 0;
+  let startedAt = null;
+  let running = false;
+  let intervalId = null;
+  let laps = [];
+
+  function format(ms) {
+    const cs = Math.floor((ms % 1000) / 10);
+    const totalSec = Math.floor(ms / 1000);
+    const s = totalSec % 60;
+    const m = Math.floor(totalSec / 60);
+    return `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}.${String(cs).padStart(2, '0')}`;
+  }
+
+  function render() {
+    const current = running ? elapsed + (Date.now() - startedAt) : elapsed;
+    display.textContent = format(current);
+  }
+
+  function renderLaps() {
+    lapList.innerHTML = laps.map((l, i) =>
+      `<div class="lap-row"><span class="lap-num">랩 ${laps.length - i}</span><span>${format(l.split)}</span><span>${format(l.total)}</span></div>`
+    ).join('');
+  }
+
+  startBtn.addEventListener('click', () => {
+    if (running) {
+      running = false;
+      elapsed += Date.now() - startedAt;
+      clearInterval(intervalId);
+      startBtn.textContent = '시작';
+      lapBtn.disabled = true;
+    } else {
+      running = true;
+      startedAt = Date.now();
+      startBtn.textContent = '정지';
+      lapBtn.disabled = false;
+      intervalId = setInterval(render, 30);
+    }
+    render();
+  });
+
+  lapBtn.addEventListener('click', () => {
+    if (!running) return;
+    const total = elapsed + (Date.now() - startedAt);
+    const prevTotal = laps.length ? laps[0].total : 0;
+    laps.unshift({ total, split: total - prevTotal });
+    renderLaps();
+  });
+
+  resetBtn.addEventListener('click', () => {
+    running = false;
+    clearInterval(intervalId);
+    elapsed = 0;
+    laps = [];
+    startBtn.textContent = '시작';
+    lapBtn.disabled = true;
+    renderLaps();
+    render();
+  });
+
+  render();
+})();
+</script>
+</body>
+</html>
