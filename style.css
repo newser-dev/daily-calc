@@ -396,18 +396,6 @@ button.ghost:hover { color: var(--text); border-color: var(--muted); }
   padding-left: 26px;
 }
 
-.ad-slot {
-  min-height: 100px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: #f1f3f5;
-  border: 1px dashed #cbd5e1;
-  border-radius: 8px;
-  color: #94a3b8;
-  font-size: 0.8rem;
-  margin: 24px 0;
-}
 
 footer {
   border-top: 1px solid var(--border);
