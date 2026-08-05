@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url><loc>https://YOUR-DOMAIN.com/</loc></url>
-  <url><loc>https://YOUR-DOMAIN.com/clock.html</loc></url>
-  <url><loc>https://YOUR-DOMAIN.com/calculator.html</loc></url>
-  <url><loc>https://YOUR-DOMAIN.com/char-count.html</loc></url>
-  <url><loc>https://YOUR-DOMAIN.com/salary.html</loc></url>
-  <url><loc>https://YOUR-DOMAIN.com/salary-table.html</loc></url>
-  <url><loc>https://YOUR-DOMAIN.com/percent.html</loc></url>
-  <url><loc>https://YOUR-DOMAIN.com/age.html</loc></url>
-  <url><loc>https://YOUR-DOMAIN.com/dday.html</loc></url>
+  <url><loc>https://dailycalc.me/</loc></url>
+  <url><loc>https://dailycalc.me/clock.html</loc></url>
+  <url><loc>https://dailycalc.me/calculator.html</loc></url>
+  <url><loc>https://dailycalc.me/char-count.html</loc></url>
+  <url><loc>https://dailycalc.me/salary.html</loc></url>
+  <url><loc>https://dailycalc.me/salary-table.html</loc></url>
+  <url><loc>https://dailycalc.me/percent.html</loc></url>
+  <url><loc>https://dailycalc.me/age.html</loc></url>
+  <url><loc>https://dailycalc.me/dday.html</loc></url>
+  <url><loc>https://dailycalc.me/privacy.html</loc></url>
 </urlset>
