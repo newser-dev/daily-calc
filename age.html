@@ -6,6 +6,8 @@
 <title>만나이 계산기 - 생년월일로 만나이, 다음 생일 계산 | 간편계산소</title>
 <meta name="description" content="생년월일만 입력하면 오늘 기준 만나이, 연나이, 태어난 지 며칠째인지, 다음 생일까지 남은 날을 계산합니다.">
 <link rel="stylesheet" href="style.css">
+<meta name="theme-color" content="#2563eb">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%232563eb'/%3E%3Cpath d='M10 13h12M10 19h12' stroke='%23fff' stroke-width='3' stroke-linecap='round'/%3E%3C/svg%3E">
 <link rel="canonical" href="https://dailycalc.me/age.html">
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6240593008907807" crossorigin="anonymous"></script>
 <!-- Google tag (gtag.js) -->
@@ -97,7 +99,7 @@ document.getElementById('calcBtn').addEventListener('click', () => {
   el('age').textContent = age + '세';
   el('yearAge').textContent = (today.getFullYear() - birth.getFullYear()) + '세';
   el('days').textContent = days.toLocaleString('ko-KR');
-  el('nextBday').textContent = toBday === 0 ? '오늘! 🎉' : 'D-' + toBday;
+  el('nextBday').textContent = toBday === 0 ? '오늘!' : 'D-' + toBday;
 });
 </script>
 </body>
